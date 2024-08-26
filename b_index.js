@@ -220,9 +220,10 @@ function Predict(input, type) {
 
 //  BUTTON CLICKS
  document.querySelector('.form-container').addEventListener('click', (e)=> {
+    
      let textField = document.forms["Form"]["text_field"]
      if (e.target.className === 'btn btn-light') {
-         let currentWord = textField.value.split(' ').pop()
+         let currentWord = textField.value.split(' ').pop();         
          if (currentWord === '') {
             let wordToAdd = textField.value + e.target.dataset.value
             textField.value = wordToAdd + ' '
@@ -286,3 +287,42 @@ function Predict(input, type) {
         Predict(textField.toLowerCase(), 'complete')
     }
 }
+
+const form = document.querySelector('#Form');
+
+form.addEventListener('submit', (event) => {
+    event.preventDefault(); 
+    let buttonContainer = document.querySelector('.button-container');
+    if(buttonContainer.childNodes.length){
+        
+        let textField = event.target[0];
+        let currentWord = textField.value.split(' ').pop();
+        const firstButton = buttonContainer.childNodes[0];
+         if (currentWord === '') {
+            let wordToAdd = textField.value + firstButton.dataset.value
+            textField.value = wordToAdd + ' '
+            Predict(firstButton.dataset.value, 'predict')
+         }
+         else {
+             let num_spaces = countSpaces(textField.value)
+             let num_words = textField.value.split(' ').length
+             let userWords = ""
+             let arrayWords = textField.value.split(' ')
+
+             for (let i = 0; i < num_words; i ++) {
+                 if (i === num_spaces) {
+                     userWords += firstButton.dataset.value
+                     break
+                 }
+                 userWords += arrayWords[i]
+                 userWords += ' '
+             }
+             let predictedWord = userWords.split(' ').pop()
+             userWords += ' '
+             textField.value = userWords
+             Predict(predictedWord.trim(), 'predict')
+            
+         }
+
+    }
+})
